@@ -1,12 +1,14 @@
 #!/bin/bash
 set -x
 
-# Install TensorFlow, Keras, PyTorch and MXNet (from package)
-pip install future typing
-pip install tensorflow-cpu==${TENSORFLOW_VERSION} \
-            keras \
-            h5py
+# 1) Arguments
+if [ $# -eq 1 ]; then
+     TENSORFLOW_VERSION=$1
+else
+     TENSORFLOW_VERSION=2.3.0
+fi
 
-#pip install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION}
-#pip install mxnet==${MXNET_VERSION}
+# 2) Install TensorFlow and Keras (from package)
+pip install future typing
+pip install tensorflow-cpu==${TENSORFLOW_VERSION} keras h5py
 

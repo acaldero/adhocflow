@@ -83,14 +83,12 @@ daloflow_prerequisites ()
 {
 	echo "Installing Docker, Docker-compose and Nvidia-container-runtime..."
 
-	# To Install DOCKER
-	$(BASE_PATH)/scripts/builds/docker.sh
-
-	# To Install DOCKER-COMPOSER
-	$(BASE_PATH)/scripts/builds/docker-compose.sh
+	# To Install DOCKER and DOCKER-COMPOSER
+	$(BASE_PATH)/scripts/pkg-install/docker.sh
+	$(BASE_PATH)/scripts/pkg-install/docker-compose.sh
 
 	# NVIDIA GPU: https://nvidia.github.io/nvidia-container-runtime/
-	$(BASE_PATH)/scripts/builds/nvidia-container-runtime.sh
+	$(BASE_PATH)/scripts/pkg-install/nvidia-container-runtime.sh
 }
 
 

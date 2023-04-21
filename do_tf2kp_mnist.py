@@ -27,7 +27,7 @@ import pickle as pk
 from   data_generator import DataGenerator
 
 
-# do_cache: Copy from hdfs to local
+# do_cache: Copy from remote (hdfs, etc.) to local
 def do_cache(cache_path):
     # cache_path:
     cache_parts = cache_path.split(':')
@@ -37,11 +37,11 @@ def do_cache(cache_path):
     # param to choose if we want local copy or not
     if len(cache_parts) == 2:
        cache_mode = 'hdfs2local'
-       hdfs_dir   = cache_parts[0]
+       remote_dir = cache_parts[0]
        cache_dir  = cache_parts[1]
     else:
        cache_mode = cache_parts[0]
-       hdfs_dir   = cache_parts[1]
+       remote_dir = cache_parts[1]
        cache_dir  = cache_parts[2]
 
     # add the container name at the end cache_dir
@@ -54,16 +54,16 @@ def do_cache(cache_path):
         return 'nocache', ''
 
     # list of files to copy in local
-    hdfs_list = cache_dir + "/list.txt"
-    with open(hdfs_list, "w") as f:
+    remote_list = cache_dir + "/list.txt"
+    with open(remote_list, "w") as f:
         f.write('labels.p\n')
         for item in partition['train']:
             fname = '/'.join(item.split('/')[1:]) + '.tar.gz\n'
             f.write(fname[1:])
         f.close()
 
-    # copy from hdfs to local
-    os_cmd = "hdfs/hdfs-cp.sh" + " " + cache_mode + " "  + hdfs_dir + " " + hdfs_list + " " + cache_dir
+    # copy from remote (hdfs, etc.) to local
+    os_cmd = "scripts/hdfs/hdfs-cp.sh" + " " + cache_mode + " "  + remote_dir + " " + remote_list + " " + cache_dir
     status = os.system(os_cmd)
     can_continue_with_cache = os.WIFEXITED(status) and (os.WEXITSTATUS(status) == 0)
     if not can_continue_with_cache:
@@ -129,16 +129,16 @@ parser.add_argument('--cache',   type=str, default='nocache',       nargs=1, req
 args = parser.parse_args()
 
 # configuration
-height           = int(args.height[0])
-width            = int(args.width[0])
-convs            = int(args.convs[0])
-iters            = int(args.iters[0])
-images_path      = args.path[0]
-cache_path       = args.cache[0]
-cache_mode       = args.cache[0]
-channels         = 1
-batch_size       = 32
-shuffle          = True
+height         = int(args.height[0])
+width          = int(args.width[0])
+convs          = int(args.convs[0])
+iters          = int(args.iters[0])
+images_path    = args.path[0]
+cache_path     = args.cache[0]
+cache_mode     = args.cache[0]
+channels       = 1
+batch_size     = 32
+shuffle        = True
 
 # train and validation params
 TRAIN_PARAMS = {
@@ -164,7 +164,7 @@ if labels_train == None:
 nevents=len(list(labels_train.keys()))
 partition = {'train' : list(labels_train.keys()), 'validation' : list(labels_test.keys())}
 
-# do_cache: copy from hdfs to local or not...
+# do_cache: copy from remote (hdfs, etc.) to local or not...
 cache_mode, cache_dir = do_cache(cache_path)
 TRAIN_PARAMS['cache_mode'] = cache_mode
 if cache_mode != 'nocache':
