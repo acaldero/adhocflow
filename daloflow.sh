@@ -77,26 +77,6 @@ daloflow_init ()
 	sed "s|SOURCE_DIRECTORY|$(pwd)|g" docker/Dockercompose.yml-model > Dockercompose.yml
 	sed "s|SOURCE_DIRECTORY|$(pwd)|g" docker/Dockerstack.yml-model   > Dockerstack.yml
 	cat                               docker/Dockerfile-$PU-daloflow > Dockerfile
-
-	#echo "Downloading Source Code for OpenMPI 4.0.5, tensorflow 2.3.0, and Horovod 0.20.3..."
-
-	## MPI
-        #wget https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.5.tar.gz
-	#rm -fr openmpi
-        #tar zxf openmpi-4.0.5.tar.gz
-	#mv openmpi-4.0.5 openmpi
-
-	## TENSORFLOW
-	#wget https://github.com/tensorflow/tensorflow/archive/v2.3.0.tar.gz
-	#rm -fr tensorflow
-	#tar zxf v2.3.0.tar.gz
-	#mv tensorflow-2.3.0 tensorflow
-
-	## HOROVOD
-	#wget https://github.com/horovod/horovod/archive/v0.20.3.tar.gz
-	#rm -fr horovod
-	#tar zxf v0.20.3.tar.gz
-	#mv horovod-0.20.3 horovod
 }
 
 daloflow_prerequisites ()
@@ -104,27 +84,13 @@ daloflow_prerequisites ()
 	echo "Installing Docker, Docker-compose and Nvidia-container-runtime..."
 
 	# To Install DOCKER
-	sudo apt-get update
-	sudo apt-get upgrade
-	sudo apt-get install -y curl apt-transport-https ca-certificates software-properties-common
-	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        curl https://bazel.build/bazel-release.pub.gpg | sudo apt-key add -
-	sudo apt-get update
-	sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-	sudo apt-get update
-	sudo apt install -y docker-ce docker-ce-cli containerd.io
+	$(BASE_PATH)/scripts/builds/docker.sh
 
 	# To Install DOCKER-COMPOSER
-	pip3 install docker-compose
+	$(BASE_PATH)/scripts/builds/docker-compose.sh
 
 	# NVIDIA GPU: https://nvidia.github.io/nvidia-container-runtime/
-	curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | sudo apt-key add -
-	distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-	curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
-		  sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
-	sudo apt-get update
-	apt-get install -y nvidia-container-runtime
-        #docker run -it --rm --gpus all ubuntu nvidia-smi
+	$(BASE_PATH)/scripts/builds/nvidia-container-runtime.sh
 }
 
 
@@ -382,6 +348,8 @@ if [ $# -eq 0 ]; then
 	daloflow_help $0
 	exit
 fi
+
+BASE_PATH=$(dirname $0)
 
 # for each argument, try to execute it
 while (( "$#" )); 

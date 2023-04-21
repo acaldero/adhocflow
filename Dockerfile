@@ -57,82 +57,17 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py && \
     rm get-pip.py
 
-
-# A.1) Download TENSORFLOW source code
-RUN mkdir -p /usr/src/daloflow && \
-    cd /usr/src/daloflow && \
-    wget https://github.com/tensorflow/tensorflow/archive/v2.3.0.tar.gz && \
-    rm -fr tensorflow && \
-    tar zxf v2.3.0.tar.gz && \
-    mv tensorflow-2.3.0 tensorflow
-
-# A.2) Compile TENSORFLOW source code
-#RUN cd /usr/src/daloflow/tensorflow && \
-#    yes "" | $(which python3) configure.py && \
-#    bazel build --config=opt //tensorflow/tools/pip_package:build_pip_package --action_env PYTHON_BIN_PATH=/usr/bin/python3  && \
-#    ./bazel-bin/tensorflow/tools/pip_package/build_pip_package /usr/src/daloflow/tensorflow/tensorflow_pkg
-#    # pip3 install /usr/src/daloflow/tensorflow/tensorflow_pkg/tensorflow-*.whl
-
-# A.3) Install TensorFlow, Keras, PyTorch and MXNet (from package)
-RUN pip install future typing
-RUN pip install tensorflow-cpu==${TENSORFLOW_VERSION} \
-                keras \
-                h5py
-#RUN pip install torch==${PYTORCH_VERSION} torchvision==${TORCHVISION_VERSION}
-#RUN pip install mxnet==${MXNET_VERSION}
-
-
-# B.1) Download Open MPI
-RUN mkdir -p /usr/src/daloflow && \
-    cd /usr/src/daloflow && \
-    wget https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.5.tar.gz && \
-    rm -fr openmpi && \
-    tar zxf openmpi-4.0.5.tar.gz && \
-    mv openmpi-4.0.5 openmpi
-
-# B.2) Install Open MPI (from source code)
-RUN cd /usr/src/daloflow/openmpi && \
-    ./configure --enable-orterun-prefix-by-default && \
-    make -j $(nproc) all && \
-    make install && \
-    ldconfig
-
-
-# C.1) Download HOROVOD source code
-RUN mkdir -p /usr/src/daloflow && \
-    cd /usr/src/daloflow && \
-    wget https://github.com/horovod/horovod/archive/v0.20.3.tar.gz && \
-    rm -fr horovod && \
-    tar zxf v0.20.3.tar.gz && \
-    mv horovod-0.20.3 horovod
-
-# C.2) Compile HOROVOD source code
-#RUN cd /usr/src/daloflow/horovod && \
-#    python3 setup.py clean && \
-#    CFLAGS="-march=native -mavx -mavx2 -mfma -mfpmath=sse" python3 setup.py bdist_wheel
-#  # HOROVOD_WITH_MPI=1 HOROVOD_WITH_TENSORFLOW=1 pip3 install ./dist/horovod-*.whl
-
-# C.3) Install Horovod (from package)
-RUN HOROVOD_WITH_TENSORFLOW=1 HOROVOD_WITHOUT_PYTORCH=1 HOROVOD_WITHOUT_MXNET=1 HOROVOD_WITH_MPI=1 \
-    pip install --no-cache-dir horovod
-
-
-# D.1) OpenSSH: Install for MPI to communicate between containers
-RUN apt-get install -y --no-install-recommends openssh-client openssh-server
-RUN mkdir -p /var/run/sshd
-
-# D.2) OpenSSH: Allow Root login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-RUN sed -i 's/PermitRootLogin prohibit-password/#PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
-RUN echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-# OpenSSH: Allow to talk to containers without asking for confirmation
-RUN cat /etc/ssh/ssh_config | grep -v StrictHostKeyChecking > /etc/ssh/ssh_config.new && \
-    echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config.new && \
-    mv /etc/ssh/ssh_config.new /etc/ssh/ssh_config
-# OpenSSH: keygen
-RUN ssh-keygen -q -t rsa -N "" -f /root/.ssh/id_rsa
-RUN cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
-
+# Install AdHocFlow related software:
+#  a) from source (OpenMPI)
+COPY scripts/src-install/*.sh /tmp
+RUN  chmod a+x /tmp/*.sh
+RUN  /tmp/openmpi.sh  /usr/src/daloflow/openmpi
+#  b) from package (Tensorflow, Horovod, SSH)
+COPY scripts/pkg-install/*.sh /tmp
+RUN  chmod a+x /tmp/*.sh
+RUN  /tmp/tensorflow.sh
+RUN  /tmp/horovod.sh
+RUN  /tmp/ssh.sh
 
 # Initial env
 RUN echo 'root:daloflow' | chpasswd

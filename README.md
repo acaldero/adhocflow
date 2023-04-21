@@ -3,9 +3,8 @@
  <br>
 </html>
 
-## Ad-Hoc Flow
 
-Ad-Hoc Flow is an evolution of the [DAta LOcality on tensorFLOW](https://github.com/saulam/daloflow) project.
+Ad-Hoc Flow is an evolution of the [DAta LOcality on tensorFLOW](https://github.com/saulam/daloflow) project. \
 Daloflow uses HDFS as back-end storage solution but *Ad-Hoc Flow* extends to more storage solutions.
 
 
