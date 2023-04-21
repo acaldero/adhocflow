@@ -1,0 +1,11 @@
+dataset32x32/labels.p
+dataset32x32/0/train0.tar.gz
+dataset32x32/0/train1.tar.gz
+dataset32x32/0/train2.tar.gz
+dataset32x32/0/train3.tar.gz
+dataset32x32/0/train4.tar.gz
+dataset32x32/0/train5.tar.gz
+dataset32x32/0/train6.tar.gz
+dataset32x32/0/train7.tar.gz
+dataset32x32/0/train8.tar.gz
+dataset32x32/0/train9.tar.gz

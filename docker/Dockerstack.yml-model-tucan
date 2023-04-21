@@ -1,0 +1,33 @@
+
+version: "3.8"
+
+services:
+  node:
+    image: daloflow:v2
+    volumes:
+      - type: bind
+        source: SOURCE_DIRECTORY
+        target: /daloflow
+     #- type: bind
+     #  source: /mnt/local-storage/daloflow
+     #  target: /usr/src/daloflow
+      - type: bind
+        source: /mnt/local-storage
+        target: /mnt/local-storage
+      - type: bind
+        source: /mnt/gluster-distributed
+        target: /mnt/gluster-distributed
+      - type: bind
+        source: /mnt/gluster-replicated
+        target: /mnt/gluster-replicated
+    #runtime: nvidia
+    networks:
+      - backend
+
+networks:
+  backend:
+    #driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/16
+
