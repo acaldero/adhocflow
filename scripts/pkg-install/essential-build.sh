@@ -1,13 +1,16 @@
 #!/bin/bash
 set -x
 
-RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
+apt-get update && \
+apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
         build-essential \
         cmake \
-        autoconf \
-        libtool \
         g++ \
         g++-4.8 \
+        \
+        autoconf \
+        libtool \
+	automake \
         \
         git \
         subversion \

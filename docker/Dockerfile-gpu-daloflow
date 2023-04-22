@@ -31,22 +31,23 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
 
 # A) Install Tensorflow, PyTorch and mxnet (from package)
 COPY scripts/pkg-install/*.sh /tmp
-RUN  chmod a+x /tmp/*.sh
-RUN  /tmp/tensorflow.sh  ${TENSORFLOW_VERSION}
-RUN  /tmp/pytorch-cuda.sh
-RUN  /tmp/mxnet-cuda.sh
+ RUN  chmod a+x /tmp/*.sh
+ RUN  /tmp/tensorflow.sh  ${TENSORFLOW_VERSION}
+#RUN  /tmp/pytorch-cuda.sh
+#RUN  /tmp/mxnet-cuda.sh
+ RUN  /tmp/openmpi.sh
 
 # B) Install OpenMPI and XPN (from source)
 COPY scripts/src-install/*.sh /tmp
-RUN  chmod a+x /tmp/*.sh
-RUN  /tmp/openmpi.sh  /usr/src/daloflow/openmpi
-RUN  /tmp/xpn.sh      /usr/src/daloflow/xpn
+ RUN  chmod a+x /tmp/*.sh
+#RUN  /tmp/openmpi.sh  /usr/src/daloflow/openmpi
+ RUN  /tmp/xpn.sh      /usr/src/daloflow/xpn
 
 # C) Install Horovod and SSH (from package)
 COPY scripts/pkg-install/*.sh /tmp
-RUN  chmod a+x /tmp/*.sh
-RUN  /tmp/horovod-cuda.sh
-RUN  /tmp/ssh.sh
+ RUN  chmod a+x /tmp/*.sh
+ RUN  /tmp/horovod-cuda.sh
+ RUN  /tmp/ssh.sh
 
 # Initial env
 RUN echo 'root:daloflow' | chpasswd
