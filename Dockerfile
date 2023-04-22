@@ -1,14 +1,4 @@
-FROM nvidia/cuda:10.1-devel-ubuntu18.04
-
-ENV TENSORFLOW_VERSION=2.3.0
-ENV PYTORCH_VERSION=1.6.0
-ENV TORCHVISION_VERSION=0.7.0
-ENV CUDNN_VERSION=8.7.0.84-1+cuda10.2
-ENV NCCL_VERSION=2.15.5-1+cuda10.2
-ENV MXNET_VERSION=1.6.0.post0
-
-ARG python=3.7
-ENV PYTHON_VERSION=${python}
+FROM nvcr.io/nvidia/tensorflow
 
 # Set default shell to /bin/bash
 SHELL ["/bin/bash", "-cu"]
@@ -19,29 +9,16 @@ RUN  chmod a+x /tmp/*.sh
 RUN  /tmp/essential-util.sh
 RUN  /tmp/essential-net.sh
 RUN  /tmp/essential-build.sh
-RUN  /tmp/essential-python.sh ${PYTHON_VERSION}
 
-# Install essential CUDA
-RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-recommends \
-        libcudnn8=${CUDNN_VERSION} \
-        libnccl2=${NCCL_VERSION} \
-        libnccl-dev=${NCCL_VERSION} \
-        && \
-    apt-get clean
-
-# A) Install Tensorflow, PyTorch and mxnet (from package)
+# A) Install OpenMPI (from package)
 COPY scripts/pkg-install/*.sh /tmp
  RUN  chmod a+x /tmp/*.sh
- RUN  /tmp/tensorflow.sh  ${TENSORFLOW_VERSION}
-#RUN  /tmp/pytorch-cuda.sh
-#RUN  /tmp/mxnet-cuda.sh
  RUN  /tmp/openmpi.sh
 
-# B) Install OpenMPI and XPN (from source)
+# B) Install and XPN (from source)
 COPY scripts/src-install/*.sh /tmp
  RUN  chmod a+x /tmp/*.sh
-#RUN  /tmp/openmpi.sh  /usr/src/daloflow/openmpi
- RUN  /tmp/xpn.sh      /usr/src/daloflow/xpn
+ RUN  /tmp/xpn.sh  /usr/src/daloflow/xpn
 
 # C) Install Horovod and SSH (from package)
 COPY scripts/pkg-install/*.sh /tmp
