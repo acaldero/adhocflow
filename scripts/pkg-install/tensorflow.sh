@@ -9,6 +9,23 @@ else
 fi
 
 # 2) Install TensorFlow and Keras (from package)
-pip install future typing
-pip install tensorflow-cpu==${TENSORFLOW_VERSION} keras h5py
+pip install future typing packaging
+pip install tensorflow-cpu==${TENSORFLOW_VERSION} \
+            keras \
+            h5py \
+            setuptools \
+            Pillow \
+            wheel \
+            typing \
+            keras_preprocessing \
+            matplotlib \
+            mock \
+            numpy \
+            scipy \
+            pandas \
+            mock \
+            enum34 \
+            scikit-learn \
+            future \
+            portpicker
 

@@ -13,18 +13,11 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
         gpg-agent \
         curl \
         wget \
+        \
         unzip \
         zip \
         htop \
-        \
         vim \
-        libmxml1 \
-        swig \
-        \
-        libmxml-dev \
-        libjpeg-dev \
-        libpng-dev \
-        zlib1g-dev \
         && \
     apt-get clean 
 
