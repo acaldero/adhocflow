@@ -1,21 +1,21 @@
-FROM nvcr.io/nvidia/tensorflow
+FROM tensorflow/tensorflow:latest-gpu
 
 # Set default shell to /bin/bash
 SHELL ["/bin/bash", "-cu"]
 
 # Install essential software
 COPY scripts/pkg-install/*.sh /tmp
-RUN  chmod a+x /tmp/*.sh
-RUN  /tmp/essential-util.sh
-RUN  /tmp/essential-net.sh
-RUN  /tmp/essential-build.sh
+ RUN  chmod a+x /tmp/*.sh
+ RUN  /tmp/essential-util.sh
+ RUN  /tmp/essential-net.sh
+ RUN  /tmp/essential-build.sh
 
 # A) Install OpenMPI (from package)
 COPY scripts/pkg-install/*.sh /tmp
  RUN  chmod a+x /tmp/*.sh
  RUN  /tmp/openmpi.sh
 
-# B) Install and XPN (from source)
+# B) Install XPN (from source)
 COPY scripts/src-install/*.sh /tmp
  RUN  chmod a+x /tmp/*.sh
  RUN  /tmp/xpn.sh  /usr/src/daloflow/xpn

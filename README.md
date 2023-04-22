@@ -80,12 +80,15 @@ python3 mk_dataset.py --height 32 --width 32 --ntrain 1000000 --ntest 1000
  ./daloflow.sh bash <container id: from 1 up to NC>
 ```
 
+## Related links:
+1.- [Tensorflow Dockerfiles](https://github.com/tensorflow/build/blob/master/tensorflow_runtime_dockerfiles/README.md)
+
 
 ## Authors
 * :technologist: Saúl Alonso Monsalve
 * :technologist: Félix García-Carballeira
 * :technologist: Alejandro Calderón Mateos
-* :technologist: José Rivadeneira López-Bravo 
-* :technologist: Diego Camarmas Alonso 
-* :technologist: Elias del Pozo Puñal
+* :technologist: José Rivadeneira López-Bravo (HDFS)
+* :technologist: Diego Camarmas Alonso (XPN)
+* :technologist: Elias del Pozo Puñal (XPN)
 

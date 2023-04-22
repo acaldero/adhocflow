@@ -108,28 +108,28 @@ daloflow_build_base_image ()
         fi
 
 	echo "Building initial image..."
-	docker image build -t daloflow:v2 .
+	docker image build -t daloflow:v3 .
 }
 
 daloflow_save ()
 {
-	echo "Saving daloflow:v2 image..."
+	echo "Saving daloflow:v3 image..."
 	IMAGE_ID_LIST=$(docker image ls|grep daloflow|grep latest|awk '{print $3}')
-	docker image save daloflow:v2 | gzip -5 > daloflow_v2.tgz 
+	docker image save daloflow:v3 | gzip -5 > daloflow_v3.tgz 
 }
 
 daloflow_load ()
 {
 	# Check params
-        if [ ! -f daloflow_v2.tgz ]; then
-            echo ": The daloflow_v2.tgz file is not found."
+        if [ ! -f daloflow_v3.tgz ]; then
+            echo ": The daloflow_v3.tgz file is not found."
 	    echo ": * Please see ./daloflow.sh help for more information."
 	    echo ""
             exit
         fi
 
-	echo "Loading daloflow:v2 image..."
-	cat daloflow_v2.tgz | gunzip - | docker image load
+	echo "Loading daloflow:v3 image..."
+	cat daloflow_v3.tgz | gunzip - | docker image load
 }
 
 
@@ -265,7 +265,7 @@ daloflow_run ()
             exit
 	fi
 
-        # daloflow:v2
+        # daloflow:v3
 	docker container exec -it $CNAME     \
 	       mpirun -np $NP -machinefile machines_horovod \
 	              --oversubscribe \

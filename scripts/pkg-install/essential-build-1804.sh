@@ -6,6 +6,7 @@ apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-
         build-essential \
         cmake \
         g++ \
+        g++-4.8 \
         \
         autoconf \
         libtool \
@@ -30,4 +31,7 @@ apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-
         libzmq3-dev \
         && \
     apt-get clean 
+
+# Not in GPU listing: g++-4.8
+# Not in CPU listing: g++
 

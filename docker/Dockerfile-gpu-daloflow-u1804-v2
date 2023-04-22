@@ -18,7 +18,7 @@ COPY scripts/pkg-install/*.sh /tmp
 RUN  chmod a+x /tmp/*.sh
 RUN  /tmp/essential-util.sh
 RUN  /tmp/essential-net.sh
-RUN  /tmp/essential-build.sh
+RUN  /tmp/essential-build-1804.sh
 RUN  /tmp/essential-python.sh ${PYTHON_VERSION}
 
 # Install essential CUDA

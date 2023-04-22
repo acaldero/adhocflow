@@ -5,7 +5,7 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
-    image: daloflow:v2
+    image: daloflow:v3
     volumes:
       - type: bind
         source: SOURCE_DIRECTORY
