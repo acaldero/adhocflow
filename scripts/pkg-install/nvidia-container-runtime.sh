@@ -8,5 +8,7 @@ curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidi
 	  sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
 sudo apt-get update
 apt-get install -y nvidia-container-runtime
-#docker run -it --rm --gpus all ubuntu nvidia-smi
+
+# apt-get install -y nvidia-cuda-toolkit nvidia-docker2
+# docker run -it --rm --gpus all ubuntu nvidia-smi
 

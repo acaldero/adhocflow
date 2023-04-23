@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  node:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: daloflow:v3
+    volumes:
+      - type: bind
+        source: SOURCE_DIRECTORY
+        target: /daloflow
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+    #ipam:
+    #  config:
+    #    - subnet: 192.168.0.0/16
+

@@ -1,0 +1,20 @@
+
+version: "3.8"
+
+services:
+  node:
+    image: daloflow:v3
+    volumes:
+      - type: bind
+        source: SOURCE_DIRECTORY
+        target: /daloflow
+    runtime: nvidia
+    networks:
+      - backend
+
+networks:
+  backend:
+    ipam:
+      config:
+        - subnet: 192.168.0.0/16
+

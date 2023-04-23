@@ -74,9 +74,9 @@ daloflow_init ()
 	echo "Building Dockerfile, Dockercompose.yml and Dockerstack.yml for $PU..."
 
 	# SOURCE_DIRECTORY -> current working directory
-	sed "s|SOURCE_DIRECTORY|$(pwd)|g" docker/Dockercompose.yml-model > Dockercompose.yml
-	sed "s|SOURCE_DIRECTORY|$(pwd)|g" docker/Dockerstack.yml-model   > Dockerstack.yml
-	cat                               docker/Dockerfile-$PU-daloflow > Dockerfile
+	sed "s|SOURCE_DIRECTORY|$(pwd)|g" docker/Dockercompose.yml-model-$PU > Dockercompose.yml
+	sed "s|SOURCE_DIRECTORY|$(pwd)|g" docker/Dockerstack.yml-model-$PU   > Dockerstack.yml
+	cat                               docker/Dockerfile-model-$PU        > Dockerfile
 }
 
 daloflow_prerequisites ()
@@ -168,7 +168,7 @@ daloflow_start ()
 	sleep $NC
 
 	# Container cluster (in single node) files...
-	CONTAINER_ID_LIST=$(docker ps -f name=daloflow -q)
+	CONTAINER_ID_LIST=$(docker ps -f name=adhocflow -q)
 	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINER_ID_LIST > machines_mpi
 	docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINER_ID_LIST | sed 's/.*/& slots=1 max_slots=16/g' > machines_horovod
 
@@ -247,7 +247,7 @@ daloflow_run ()
 	NP=$1
 	shift
 	A=$@
-	CNAME=$(docker ps -f name=daloflow -q | head -1)
+	CNAME=$(docker ps -f name=adhocflow -q | head -1)
 
 	# Check parameters
 	if [ "x$CNAME" == "x" ]; then
@@ -281,7 +281,7 @@ daloflow_bash_node ()
 {
 	# Get parameters
 	CIP=$(head -$1 machines_mpi | tail -1)
-	CNAME=$(docker ps -f name=daloflow -q | head -1)
+	CNAME=$(docker ps -f name=adhocflow -q | head -1)
 	NN=$(wc -l machines_mpi  | awk '{print $1}')
 
 	# Check parameters
@@ -317,7 +317,7 @@ daloflow_bash_node ()
 daloflow_test ()
 {
 	# Install each node
-	CONTAINER_ID_LIST=$(docker ps -f name=daloflow -q)
+	CONTAINER_ID_LIST=$(docker ps -f name=adhocflow -q)
 	for C in $CONTAINER_ID_LIST; do
 		docker container exec -it $C ./daloflow.sh test_node 
 	done
@@ -415,6 +415,7 @@ do
 	     ;;
              docker_in_docker)
 		docker run --network host -v $(pwd):/usr/src/daloflow -v "/var/run/docker.sock:/var/run/docker.sock" --runtime=nvidia -it ubuntu /bin/bash
+	      # docker run --network host -v $(pwd):/usr/src/daloflow -v "/var/run/docker.sock:/var/run/docker.sock" --gpus all       -it ubuntu /bin/bash
 	     ;;
 
 	     # help

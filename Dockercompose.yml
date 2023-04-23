@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  node:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: daloflow:v3
+    volumes:
+      - type: bind
+        source: /home/acaldero/work/adhocflow
+        target: /daloflow
+    networks:
+      - backend
+    #runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+
+networks:
+  backend:
+    driver: bridge
+    #ipam:
+    #  config:
+    #    - subnet: 192.168.0.0/16
+

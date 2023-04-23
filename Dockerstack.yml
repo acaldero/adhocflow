@@ -1,14 +1,12 @@
+
 version: "3.8"
 
 services:
   node:
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
     image: daloflow:v3
     volumes:
       - type: bind
-        source: SOURCE_DIRECTORY
+        source: /home/acaldero/work/adhocflow
         target: /daloflow
     runtime: nvidia
     networks:
@@ -16,8 +14,7 @@ services:
 
 networks:
   backend:
-    driver: bridge
-    #ipam:
-    #  config:
-    #    - subnet: 192.168.0.0/16
+    ipam:
+      config:
+        - subnet: 192.168.0.0/16
 
