@@ -3,6 +3,12 @@ FROM tensorflow/tensorflow:latest-gpu
 # Set default shell to /bin/bash
 SHELL ["/bin/bash", "-cu"]
 
+# Directories
+ RUN mkdir -p /daloflow
+ RUN ln -s /usr/src/daloflow /root/src
+ RUN ln -s /daloflow         /root/daloflow
+ RUN mkdir -p  /root/bin
+
 # Install essential software
 COPY scripts/pkg-install/*.sh /tmp
  RUN  chmod a+x /tmp/*.sh
@@ -29,9 +35,6 @@ COPY scripts/pkg-install/*.sh /tmp
 # Initial env
 RUN echo 'root:daloflow' | chpasswd
 
-RUN mkdir -p /daloflow
-RUN ln -s /usr/src/daloflow /root/daloflow_src
-RUN ln -s /daloflow         /root/daloflow
 WORKDIR "/daloflow"
 
 EXPOSE 22

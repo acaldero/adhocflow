@@ -24,14 +24,12 @@ fi
 
 # 4) Install XPN (from source code)
 MPICC_PATH=$(whereis -b mpicc | awk '{ print $2 }')
+mkdir -p $HOME/bin/xpn
 
 cd ${DESTINATION_PATH} 
 ACLOCAL_FLAGS="-I /usr/share/aclocal/" autoreconf -v -i -s -W all
-./configure --enable-tcp_server --enable-mpi_server="$MPICC_PATH"
+./configure --enable-tcp_server --enable-mpi_server="$MPICC_PATH" --prefix=${HOME}/bin/xpn
 make clean 
 make -j
-
-# ACLOCAL_FLAGS="-I /usr/share/aclocal/" autoreconf -v -i -s -W all
-# ./configure --prefix=$INSTALL_PATH/xpn --enable-tcp_server --enable-mpi_server="$MPICC_PATH"
-# make clean; make -j; make install
+make install
 
