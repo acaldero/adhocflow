@@ -8,9 +8,6 @@ apt-get install -y --allow-downgrades --allow-change-held-packages --no-install-
         openmpi-common \
         openmpi-doc \
         \
-        libpmi-pmix-dev  \
-        libpmi1-pmix  \
-        libpmi2-pmix  \
         libhdf5-openmpi-dev  \
         \
         netpipe-openmpi \
